@@ -30,6 +30,9 @@ public class CobrancaEndPoint {
         CobrancaDTO dto = modelMapper.map(cobranca, CobrancaDTO.class);
         dto.getDevedor().setDataNascimento(null);
         dto.getCalendario().setDataInicio(null);
+        if(cobranca == null || dto == null) {
+            return Response.noContent().build();
+        }
         return Response.ok(jsonConverter.toJson(dto)).build();
     }
 
@@ -38,6 +41,9 @@ public class CobrancaEndPoint {
     public Response findCobrancasByPessoaFisica(@PathParam("id") Integer id) {
         List<CobrancaDTO> cobrancas = new ArrayList<>();
         service.findCobrancasByPessoaFisica(id).forEach(c -> cobrancas.add(modelMapper.map(c, CobrancaDTO.class)));
+        if(cobrancas.isEmpty()) {
+            return Response.noContent().build();
+        }
         return Response.ok(jsonConverter.toJson(cobrancas)).build();
     }
 }

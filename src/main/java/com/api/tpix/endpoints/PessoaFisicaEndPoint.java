@@ -33,18 +33,26 @@ public class PessoaFisicaEndPoint {
     @GET
     @Path("/{id}")
     public Response findById(@PathParam("id") Integer id) {
+        if(service.findById(id) == null) {
+            return Response.noContent().build();
+        }
         return Response.ok(jsonConverter.toJson(modelMapper.map(service.findById(id), PessoaFisicaDTO.class))).build();
     }
 
     @POST
-    public void addPessoaFisica(PessoaFisicaDTO pessoaFisica) {
+    public Response addPessoaFisica(PessoaFisicaDTO pessoaFisica) {
         service.addPessoaFisica(modelMapper.map(pessoaFisica, PessoaFisica.class));
+        return Response.status(Response.Status.CREATED).build();
     }
 
     @PUT
-    public void updatePessoaFisica(PessoaFisicaDTO pessoaFisicaDTO, @PathParam("id") Integer id) {
+    @Path("/{id}")
+    public Response updatePessoaFisica(PessoaFisicaDTO pessoaFisicaDTO, @PathParam("id") Integer id) {
         PessoaFisica pessoaFisica = modelMapper.map(pessoaFisicaDTO, PessoaFisica.class);
-        service.updatePessoaFisica(pessoaFisica, id);
+        if(pessoaFisica.getCpf() == null || pessoaFisica.getNome() == null) {
+            return Response.status(Response.Status.EXPECTATION_FAILED).build();
+        }
+        return Response.ok(jsonConverter.toJson(service.updatePessoaFisica(pessoaFisica, id))).build();
     }
 
 }

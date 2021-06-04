@@ -33,13 +33,14 @@ public class PessoaFisicaService {
         entityManager.close();
     }
 
-    public void updatePessoaFisica(PessoaFisica pessoaFisica, Integer id) {
+    public PessoaFisica updatePessoaFisica(PessoaFisica pessoaFisica, Integer id) {
         EntityManager entityManager = JpaFactory.getEntityManager();
         entityManager.getTransaction().begin();
         pessoaFisica.setId(id);
         entityManager.merge(pessoaFisica);
         entityManager.getTransaction().commit();
         entityManager.close();
+        return pessoaFisica;
     }
 
 }
